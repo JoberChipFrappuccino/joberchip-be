@@ -16,8 +16,9 @@ public class AttachedFile {
   @Column(name = "attached_file_id")
   private Long attachedFileId;
 
+  @Enumerated(EnumType.STRING)
   @Column(name = "content_type")
-  private String contentType;
+  private ContentTypeEnum contentType;
 
   @Column(name = "save_path")
   private String savePath;
@@ -31,22 +32,21 @@ public class AttachedFile {
   @OneToOne(mappedBy = "attachedFile")
   private ProfileImageFile profileImageFile;
 
-  private AttachedFile(Long attachedFileId, String contentType, String savePath) {
+  private AttachedFile(Long attachedFileId, ContentTypeEnum contentType, String savePath) {
     this.attachedFileId = attachedFileId;
+    this.savePath = savePath;
+  }
+
+  private AttachedFile(ContentTypeEnum contentType, String savePath) {
     this.contentType = contentType;
     this.savePath = savePath;
   }
 
-  private AttachedFile(String contentType, String savePath) {
-    this.contentType = contentType;
-    this.savePath = savePath;
-  }
-
-  public static AttachedFile of(String contentType, String savePath) {
+  public static AttachedFile of(ContentTypeEnum contentType, String savePath) {
     return new AttachedFile(contentType, savePath);
   }
 
-  public static AttachedFile of(Long fileId, String contentType, String savePath) {
+  public static AttachedFile of(Long fileId, ContentTypeEnum contentType, String savePath) {
     return new AttachedFile(fileId, contentType, savePath);
   }
 
