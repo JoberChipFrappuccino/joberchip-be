@@ -14,7 +14,9 @@ public class TextBlockController {
 
   @PostMapping("/text")
   public ApiResponse.Result<Object> createTextBlock(
-      @PathVariable Long spaceId, @PathVariable Long pageId, @RequestBody MultipartFile file) {
+      @PathVariable Long spaceId,
+      @PathVariable Long pageId,
+      @RequestBody String content) {
 
     return ApiResponse.success();
   }
@@ -24,7 +26,7 @@ public class TextBlockController {
       @PathVariable Long spaceId,
       @PathVariable Long pageId,
       @PathVariable Long blockId,
-      @RequestBody MultipartFile file) {
+      @RequestBody String content) {
 
     return ApiResponse.success();
   }
