@@ -14,20 +14,16 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "image_block_tb")
+@Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ImageBlock extends BaseObject {
   @Column(name = "title")
-  @Getter
   private String title;
 
   @Column(name = "description")
-  @Getter
   private String description;
-
-  @Column(name = "image_link")
-  @Getter
-  private String imageLink;
 
   @OneToOne(mappedBy = "imageBlock")
   private ImageBlockFile imageBlockFile;

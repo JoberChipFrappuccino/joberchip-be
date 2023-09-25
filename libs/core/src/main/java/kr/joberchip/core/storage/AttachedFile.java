@@ -3,6 +3,7 @@ package kr.joberchip.core.storage;
 import javax.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /** 첨부파일 테이블 엔티티 */
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "attached_file_tb")
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
+@Getter
 public class AttachedFile {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

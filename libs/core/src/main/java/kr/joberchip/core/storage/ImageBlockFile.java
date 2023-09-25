@@ -2,8 +2,10 @@ package kr.joberchip.core.storage;
 
 import javax.persistence.*;
 import kr.joberchip.core.share.block.ImageBlock;
+import lombok.Getter;
 
 @Entity
+@Getter
 @Table(name = "image_file_tb")
 public class ImageBlockFile {
   @Id
