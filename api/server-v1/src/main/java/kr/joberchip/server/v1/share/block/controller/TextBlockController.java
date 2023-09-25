@@ -1,6 +1,8 @@
 package kr.joberchip.server.v1.share.block.controller;
 
+import kr.joberchip.core.space.block.TextBlock;
 import kr.joberchip.server.v1._utils.ApiResponse;
+import kr.joberchip.server.v1.space.block.service.TextBlockService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -12,11 +14,17 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/v1/space/{spaceId}/page/{pageId}/block")
 public class TextBlockController {
 
+  private final TextBlockService textBlockService;
+
   @PostMapping("/text")
   public ApiResponse.Result<Object> createTextBlock(
-      @PathVariable Long spaceId, @PathVariable Long pageId, @RequestBody MultipartFile file) {
+      @PathVariable Long spaceId,
+      @PathVariable Long pageId,
+      @RequestBody String content) {
 
-    return ApiResponse.success();
+    TextBlock textBlock = textBlockService.createTextBlock(content);
+
+    return ApiResponse.success(textBlock);
   }
 
   @PutMapping("/text/{blockId}")
@@ -24,7 +32,7 @@ public class TextBlockController {
       @PathVariable Long spaceId,
       @PathVariable Long pageId,
       @PathVariable Long blockId,
-      @RequestBody MultipartFile file) {
+      @RequestBody String content) {
 
     return ApiResponse.success();
   }
