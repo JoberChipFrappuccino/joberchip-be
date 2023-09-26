@@ -25,6 +25,10 @@ public class VideoBlock extends BaseObject {
   @OneToOne(mappedBy = "videoBlock")
   private VideoBlockFile videoBlockFile;
 
+  public static VideoBlock of(String title, String description) {
+    return new VideoBlock(title, description, null, null);
+  }
+
   public static VideoBlock of(String title, String description, String videoLink) {
     return new VideoBlock(title, description, videoLink, null);
   }
