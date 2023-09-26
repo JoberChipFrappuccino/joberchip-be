@@ -1,7 +1,14 @@
 package kr.joberchip.server.v1.share.block.service;
 
-import kr.joberchip.core.space.block.LinkBlock;
-import kr.joberchip.server.v1.space.block.repository.LinkBlockRepository;
+import java.util.UUID;
+import javax.persistence.EntityNotFoundException;
+import kr.joberchip.core.share.block.LinkBlock;
+import kr.joberchip.core.share.page.SharePage;
+import kr.joberchip.server.v1.share.block.dto.create.CreateLinkBlock;
+import kr.joberchip.server.v1.share.block.dto.modify.ModifyLinkBlock;
+import kr.joberchip.server.v1.share.block.dto.response.LinkBlockResponse;
+import kr.joberchip.server.v1.share.block.repository.LinkBlockRepository;
+import kr.joberchip.server.v1.share.page.repository.SharePageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -11,23 +18,23 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class LinkBlockService {
-    private final LinkBlockRepository linkBlockRepository;
+  private final LinkBlockRepository linkBlockRepository;
+  private final SharePageRepository sharePageRepository;
 
-    @Transactional
-    public LinkBlock createLinkBlock(String title, String description, String link) {
-        try {
-            LinkBlock linkBlock = LinkBlock.builder()
-                    .title(title)
-                    .description(description)
-                    .link(link)
-                    .build();
-            return linkBlockRepository.save(linkBlock);
-        } catch (Exception e) {
-            // 예외 처리 로직 추가
-            log.error("Error while creating LinkBlock: " + e.getMessage(), e);
-            throw new RuntimeException("Failed to create LinkBlock", e);
-        }
-    }
+  @Transactional
+  public LinkBlockResponse createLinkBlock(UUID pageId, CreateLinkBlock createLinkBlock) {
+    LinkBlock newLinkBlock = createLinkBlock.toEntity();
+    linkBlockRepository.save(newLinkBlock);
 
+    SharePage parentPage =
+        sharePageRepository.findById(pageId).orElseThrow(EntityNotFoundException::new);
 
+    parentPage.addLinkBlock(newLinkBlock);
+
+    return LinkBlockResponse.fromEntity(newLinkBlock);
+  }
+
+  public void deleteLinkBlock(UUID pageId, UUID blockId) {}
+
+  public void modifyLinkBlock(UUID pageId, UUID blockId, ModifyLinkBlock modifyLinkBlock) {}
 }
