@@ -10,7 +10,7 @@ import lombok.Getter;
 public class ImageBlockFile {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name="image_file_id")
+  @Column(name = "image_file_id")
   private Long imageFileId;
 
   @OneToOne private ImageBlock imageBlock;
