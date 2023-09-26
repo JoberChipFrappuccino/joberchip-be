@@ -1,7 +1,17 @@
 package kr.joberchip.server.v1.share.block.service;
 
-import kr.joberchip.server.v1._errors.exceptions.StorageException;
-import kr.joberchip.server.v1.storage.service.StorageService;
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
+import javax.persistence.EntityNotFoundException;
+import kr.joberchip.core.share.block.ImageBlock;
+import kr.joberchip.core.share.page.SharePage;
+import kr.joberchip.core.storage.AttachedFile;
+import kr.joberchip.server.v1.share.block.dto.create.CreateImageBlock;
+import kr.joberchip.server.v1.share.block.dto.modify.ModifyImageBlock;
+import kr.joberchip.server.v1.share.block.dto.response.ImageBlockResponse;
+import kr.joberchip.server.v1.share.block.repository.AttachedFileRepository;
+import kr.joberchip.server.v1.share.page.repository.SharePageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,28 +19,25 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.UUID;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class ImageBlockService {
+  private final SharePageRepository sharePageRepository;
   private final ImageBlockService imageBlockRepository;
   private final AttachedFileRepository attachedFileRepository;
 
-/*
-  public void store(MultipartFile file) {
-    try {
-      storageService.store(file);
-    } catch (StorageException se) {
-      log.info("StorageException : {}", se.getMessage());
-      log.info("caused by: {}", se.getCause().getMessage());
-    }
-    log.info("Successfully uploaded : {}", file.getOriginalFilename());
-  }
- */
+  /*
+   public void store(MultipartFile file) {
+     try {
+       storageService.store(file);
+     } catch (StorageException se) {
+       log.info("StorageException : {}", se.getMessage());
+       log.info("caused by: {}", se.getCause().getMessage());
+     }
+     log.info("Successfully uploaded : {}", file.getOriginalFilename());
+   }
+  */
   @Value("${file.dir}")
   private String fileDir;
 
@@ -39,21 +46,28 @@ public class ImageBlockService {
   }
 
   @Transactional
-  public ImageBlock createImageBlock(CreateImageBlockRequest.CreateImageBlockDTO createImageBlockDTO) throws IOException {
-    ImageBlock imageBlock = ImageBlock.builder()
-            .title(createImageBlockDTO.getTitle())
-            .description(createImageBlockDTO.getDescription())
-            .build();
+  public ImageBlockResponse createImageBlock(UUID pageId, CreateImageBlock createImageBlock) {
+    SharePage parentPage =
+        sharePageRepository.findById(pageId).orElseThrow(EntityNotFoundException::new);
+    ImageBlock imageBlock = createImageBlock.toEntity();
 
-    AttachedFile attachedFile = ImageFile(createImageBlockDTO.getAttachedImage());
-    //imageBlock = imageBlockRepository.save(imageBlock);
-    return imageBlock;
+    AttachedFile attachedFile = ImageFile(createImageBlock.attachedImage());
+    // imageBlock = imageBlockRepository.save(imageBlock);
+
+    return ImageBlockResponse.fromEntity(imageBlock);
   }
-  private AttachedFile ImageFile(MultipartFile multipartFile) throws IOException {
+
+  private AttachedFile ImageFile(MultipartFile multipartFile) {
 
     String originalFilename = multipartFile.getOriginalFilename();
     String storeFileName = createStoreFileName(originalFilename);
-    multipartFile.transferTo(new File(getFullPath(storeFileName)));
+
+    try {
+      multipartFile.transferTo(new File(getFullPath(storeFileName)));
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+
     return AttachedFile.of("image", storeFileName);
   }
 
@@ -67,4 +81,8 @@ public class ImageBlockService {
     int pos = originalFilename.lastIndexOf(".");
     return originalFilename.substring(pos + 1);
   }
+
+  public void modifyImageBlock(UUID pageId, Long blockId, ModifyImageBlock modifyImageBlock) {}
+
+  public void deleteImageBlock(UUID pageId, Long blockId) {}
 }
