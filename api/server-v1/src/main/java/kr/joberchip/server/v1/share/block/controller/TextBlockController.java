@@ -1,38 +1,47 @@
 package kr.joberchip.server.v1.share.block.controller;
 
-import kr.joberchip.core.space.block.TextBlock;
+import java.util.UUID;
 import kr.joberchip.server.v1._utils.ApiResponse;
-import kr.joberchip.server.v1.space.block.service.TextBlockService;
+import kr.joberchip.server.v1.share.block.dto.create.CreateTextBlock;
+import kr.joberchip.server.v1.share.block.dto.modify.ModifyTextBlock;
+import kr.joberchip.server.v1.share.block.service.TextBlockService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/space/{spaceId}/page/{pageId}/block")
+@RequestMapping("/v1/page/{pageId}/textBlock")
 public class TextBlockController {
 
   private final TextBlockService textBlockService;
 
-  @PostMapping("/text")
-  public ApiResponse.Result<Object> createTextBlock(
-      @PathVariable Long spaceId,
-      @PathVariable Long pageId,
-      @RequestBody String content) {
+  @PostMapping
+  public ResponseEntity<ApiResponse.Result<Object>> createTextBlock(
+      @PathVariable UUID pageId, @RequestBody CreateTextBlock createTextBlock) {
 
-    TextBlock textBlock = textBlockService.createTextBlock(content);
+    textBlockService.createTextBlock(pageId, createTextBlock);
 
-    return ApiResponse.success(textBlock);
+    return ResponseEntity.ok(ApiResponse.success());
   }
 
-  @PutMapping("/text/{blockId}")
+  @PutMapping("/{blockId}")
   public ApiResponse.Result<Object> modifyTextBlock(
-      @PathVariable Long spaceId,
-      @PathVariable Long pageId,
-      @PathVariable Long blockId,
-      @RequestBody String content) {
+      @PathVariable UUID pageId,
+      @PathVariable UUID blockId,
+      @RequestBody ModifyTextBlock modifyTextBlock) {
+    textBlockService.modifyTextBlock(pageId, blockId, modifyTextBlock);
+
+    return ApiResponse.success();
+  }
+
+  @DeleteMapping("/{blockId}")
+  public ApiResponse.Result<Object> modifyTextBlock(
+      @PathVariable UUID pageId, @PathVariable UUID blockId) {
+
+    textBlockService.deleteTextBlock(pageId, blockId);
 
     return ApiResponse.success();
   }
