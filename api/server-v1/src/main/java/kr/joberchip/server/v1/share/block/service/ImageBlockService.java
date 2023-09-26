@@ -24,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class ImageBlockService {
   private final SharePageRepository sharePageRepository;
-  private final ImageBlockService imageBlockRepository;
   private final AttachedFileRepository attachedFileRepository;
 
   /*
