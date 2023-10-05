@@ -16,33 +16,25 @@ public class LinkBlock extends BaseObject {
   @Column(name = "title")
   private String title;
 
-  @Column(name = "description")
-  private String description;
-
   @Column(name = "link")
   @Lob
   private String link;
 
   public static LinkBlock of(
-      String title, String description, String link, Integer x, Integer y, Integer w, Integer h, Boolean visible) {
+      String title, String link, Integer x, Integer y, Integer w, Integer h) {
 
-    LinkBlock generated = new LinkBlock(title, description, link);
+    LinkBlock generated = new LinkBlock(title, link);
 
     generated.setX(x);
     generated.setY(y);
     generated.setW(w);
     generated.setH(h);
-    generated.setVisible(visible);
 
     return generated;
   }
 
   public void modifyTitle(String title) {
     this.title = title;
-  }
-
-  public void modifyDescription(String description) {
-    this.description = description;
   }
 
   public void modifyLink(String link) {

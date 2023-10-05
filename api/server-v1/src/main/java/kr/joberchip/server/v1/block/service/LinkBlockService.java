@@ -7,7 +7,7 @@ import kr.joberchip.core.page.SharePage;
 import kr.joberchip.server.v1._errors.ErrorMessage;
 import kr.joberchip.server.v1._errors.exceptions.ApiClientException;
 import kr.joberchip.server.v1.block.controller.dto.BlockResponseDTO;
-import kr.joberchip.server.v1.block.controller.dto.LinkBlockRequestDTO;
+import kr.joberchip.server.v1.block.controller.dto.LinkBlockDTO;
 import kr.joberchip.server.v1.block.repository.LinkBlockRepository;
 import kr.joberchip.server.v1.page.repository.SharePageRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class LinkBlockService {
   private final SharePageRepository sharePageRepository;
 
   @Transactional
-  public BlockResponseDTO createLinkBlock(UUID pageId, LinkBlockRequestDTO createLinkBlock) {
+  public BlockResponseDTO createLinkBlock(UUID pageId, LinkBlockDTO createLinkBlock) {
     LinkBlock newLinkBlock = createLinkBlock.toEntity();
     linkBlockRepository.save(newLinkBlock);
 
@@ -36,15 +36,12 @@ public class LinkBlockService {
   }
 
   @Transactional
-  public BlockResponseDTO modifyLinkBlock(UUID pageId, UUID blockId, LinkBlockRequestDTO modifyRequestDTO) {
+  public BlockResponseDTO modifyLinkBlock(UUID pageId, UUID blockId, LinkBlockDTO modifyRequestDTO) {
 
     LinkBlock target =
         linkBlockRepository.findById(blockId).orElseThrow(EntityNotFoundException::new);
 
     if (modifyRequestDTO.title() != null) target.modifyTitle(modifyRequestDTO.title());
-
-    if (modifyRequestDTO.description() != null)
-      target.modifyDescription(modifyRequestDTO.description());
 
     if (modifyRequestDTO.link() != null) target.modifyLink(modifyRequestDTO.link());
 
