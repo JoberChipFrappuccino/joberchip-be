@@ -25,14 +25,16 @@ public class TemplateBlockController {
 
   @PostMapping
   public ResponseEntity<ApiResponse.Result<Object>> createTemplateBlock(
-      @AuthenticationPrincipal CustomUserDetails customUserDetails,
+      @AuthenticationPrincipal CustomUserDetails loginUser,
       @PathVariable UUID pageId,
       @RequestBody TemplateBlockDTO templateBlockDTO) {
     log.info("[TemplateBlockController] Page Id : {}", pageId);
     log.info("[TemplateBlockController] TemplateBlockDTO : {}", templateBlockDTO);
 
+    sharePagePrivilegeService.checkEditPrivilege(loginUser.user().getUserId(), pageId);
+
     templateBlockService.createTemplateBlock(
-        customUserDetails.user().getUserId(), pageId, templateBlockDTO);
+        loginUser.user().getUserId(), pageId, templateBlockDTO);
 
     return ResponseEntity.ok(ApiResponse.success());
   }
@@ -48,6 +50,8 @@ public class TemplateBlockController {
     log.info("[TemplateBlockController] Page Id : {}", pageId);
     log.info("[TemplateBlockController] Template Block Id : {}", blockId);
     log.info("[TemplateBlockController] TemplateBlockDTO : {}", templateBlockDTO);
+
+    sharePagePrivilegeService.checkEditPrivilege(loginUser.user().getUserId(), pageId);
 
     BlockResponseDTO response =
         templateBlockService.modifyTemplateBlock(
@@ -66,9 +70,7 @@ public class TemplateBlockController {
     log.info("[TemplateBlockController] Page Id : {}", pageId);
     log.info("[TemplateBlockController] Template Block Id : {}", blockId);
 
-    sharePagePrivilegeService.checkPrivilege(
-        loginUser.user().getUserId(), pageId, PrivilegeType.EDIT);
-
+    sharePagePrivilegeService.checkEditPrivilege(loginUser.user().getUserId(), pageId);
 
     templateBlockService.deleteTemplateBlock(pageId, blockId);
 
