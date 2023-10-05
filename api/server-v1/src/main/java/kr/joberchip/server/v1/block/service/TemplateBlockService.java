@@ -26,12 +26,6 @@ public class TemplateBlockService {
   public BlockResponseDTO createTemplateBlock(
       Long userId, UUID pageId, TemplateBlockDTO templateBlockDTO) {
 
-    PrivilegeType privilegeType =
-        sharePagePrivilegeRepository
-            .findByUserIdAndSharePageId(userId, pageId)
-            .orElseThrow(() -> new ApiClientException(ErrorMessage.FORBIDDEN))
-            .getPrivilegeType();
-
     SharePage sharePage =
         sharePageRepository
             .findById(pageId)
