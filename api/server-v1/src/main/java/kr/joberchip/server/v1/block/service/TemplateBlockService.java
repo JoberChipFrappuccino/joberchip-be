@@ -47,12 +47,14 @@ public class TemplateBlockService {
   public BlockResponseDTO modifyTemplateBlock(
       Long userId, UUID pageId, UUID blockId, TemplateBlockDTO templateBlockDTO) {
 
+    sharePageRepository
+            .findById(pageId)
+            .orElseThrow(() -> new ApiClientException(ErrorMessage.SHARE_PAGE_ENTITY_NOT_FOUND));
+
     TemplateBlock templateBlock =
         templateBlockRepository
             .findById(blockId)
             .orElseThrow(() -> new ApiClientException(ErrorMessage.BLOCK_ENTITY_NOT_FOUND));
-
-
 
     return null;
   }
