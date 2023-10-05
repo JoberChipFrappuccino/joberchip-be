@@ -29,6 +29,11 @@ public class MapBlockController {
       @PathVariable UUID pageId,
       @RequestBody @Valid MapBlockDTO.Create newMapBlock,
       Errors errors) {
+
+    log.info("[MapBlockController][POST] Current Username : {}", loginUser.user().getUsername());
+    log.info("[MapBlockController][POST] Current Page Id : {}", pageId);
+    log.info("[MapBlockController][POST] {}", newMapBlock);
+
     sharePagePrivilegeService.checkEditPrivilege(loginUser.user().getUserId(), pageId);
     BlockResponseDTO response = mapBlockService.createMapBlock(pageId, newMapBlock);
     return ApiResponse.success(response);
@@ -40,8 +45,16 @@ public class MapBlockController {
       @PathVariable UUID pageId,
       @PathVariable UUID blockId,
       @RequestBody MapBlockDTO.Modify modifiedMapBlock) {
+
+    log.info("[MapBlockController][PUT] Current Username : {}", loginUser.user().getUsername());
+    log.info("[MapBlockController][PUT] Current Page Id : {}", pageId);
+    log.info("[MapBlockController][PUT] Target Block Id : {}", blockId);
+    log.info("[MapBlockController][PUT] {}", modifiedMapBlock);
+
     sharePagePrivilegeService.checkEditPrivilege(loginUser.user().getUserId(), pageId);
+
     BlockResponseDTO response = mapBlockService.modifyMapBlock(pageId, blockId, modifiedMapBlock);
+
     return ApiResponse.success(response);
   }
 
@@ -50,6 +63,11 @@ public class MapBlockController {
       @AuthenticationPrincipal CustomUserDetails loginUser,
       @PathVariable UUID pageId,
       @PathVariable UUID blockId) {
+
+    log.info("[MapBlockController][DELETE] Current Username : {}", loginUser.user().getUsername());
+    log.info("[MapBlockController][DELETE] Current Page Id : {}", pageId);
+    log.info("[MapBlockController][DELETE] Target Block Id : {}", blockId);
+
     sharePagePrivilegeService.checkEditPrivilege(loginUser.user().getUserId(), pageId);
     mapBlockService.deleteMapBlock(pageId, blockId);
     return ApiResponse.success();

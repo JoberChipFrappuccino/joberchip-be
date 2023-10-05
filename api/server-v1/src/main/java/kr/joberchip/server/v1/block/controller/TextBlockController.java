@@ -26,8 +26,10 @@ public class TextBlockController {
       @AuthenticationPrincipal CustomUserDetails loginUser,
       @PathVariable UUID pageId,
       @RequestBody TextBlockDTO textBlockDTO) {
-    log.info("[TextBlockController] Login User : {}", loginUser);
-    log.info("[TextBlockController] Current Page Id : {}", pageId);
+
+    log.info("[TextBlockController][POST] Current Username : {}", loginUser.user().getUsername());
+    log.info("[TextBlockController][POST] Current Page Id : {}", pageId);
+    log.info("[TextBlockController][POST] {}", textBlockDTO);
 
     sharePagePrivilegeService.checkEditPrivilege(loginUser.user().getUserId(), pageId);
 
@@ -43,8 +45,10 @@ public class TextBlockController {
       @PathVariable UUID blockId,
       @RequestBody TextBlockDTO textBlockDTO) {
 
-    log.info("[TextBlockController] Login User : {}", loginUser);
-    log.info("[TextBlockController] Current Page Id : {}", pageId);
+    log.info("[TextBlockController][PUT] Current Username : {}", loginUser.user().getUsername());
+    log.info("[TextBlockController][PUT] Current Page Id : {}", pageId);
+    log.info("[TextBlockController][PUT] Target Block Id : {}", blockId);
+    log.info("[TextBlockController][PUT] {}", textBlockDTO);
 
     sharePagePrivilegeService.checkEditPrivilege(loginUser.user().getUserId(), pageId);
 
@@ -59,8 +63,9 @@ public class TextBlockController {
       @PathVariable UUID pageId,
       @PathVariable UUID blockId) {
 
-    log.info("[TextBlockController] Login User : {}", loginUser);
-    log.info("[TextBlockController] Current Page Id : {}", pageId);
+    log.info("[TextBlockController][DELETE] Current Username : {}", loginUser.user().getUsername());
+    log.info("[TextBlockController][DELETE] Current Page Id : {}", pageId);
+    log.info("[TextBlockController][DELETE] Target Block Id : {}", blockId);
 
     sharePagePrivilegeService.checkEditPrivilege(loginUser.user().getUserId(), pageId);
 

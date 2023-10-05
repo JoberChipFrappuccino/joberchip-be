@@ -27,8 +27,9 @@ public class VideoBlockController {
       @PathVariable UUID pageId,
       VideoBlockDTO videoBlockRequestDTO) {
 
-    log.info("[TextBlockController] Login User : {}", loginUser);
-    log.info("[TextBlockController] Current Page Id : {}", pageId);
+    log.info("[VideoBlockController][POST] Current Username : {}", loginUser.user().getUsername());
+    log.info("[VideoBlockController][POST] Current Page Id : {}", pageId);
+    log.info("[VideoBlockController][POST] {}", videoBlockRequestDTO);
 
     sharePagePrivilegeService.checkEditPrivilege(loginUser.user().getUserId(), pageId);
 
@@ -44,8 +45,10 @@ public class VideoBlockController {
       @PathVariable UUID blockId,
       VideoBlockDTO videoBlockRequestDTO) {
 
-    log.info("[TextBlockController] Login User : {}", loginUser);
-    log.info("[TextBlockController] Current Page Id : {}", pageId);
+    log.info("[VideoBlockController][PUT] Current Username : {}", loginUser.user().getUsername());
+    log.info("[VideoBlockController][PUT] Current Page Id : {}", pageId);
+    log.info("[VideoBlockController][PUT] Target Block Id : {}", blockId);
+    log.info("[VideoBlockController][PUT] {}", videoBlockRequestDTO);
 
     sharePagePrivilegeService.checkEditPrivilege(loginUser.user().getUserId(), pageId);
 
@@ -60,8 +63,9 @@ public class VideoBlockController {
       @PathVariable UUID pageId,
       @PathVariable UUID blockId) {
 
-    log.info("[TextBlockController] Login User : {}", loginUser);
-    log.info("[TextBlockController] Current Page Id : {}", pageId);
+    log.info("[VideoBlockController][DELETE] Current Username : {}", loginUser.user().getUsername());
+    log.info("[VideoBlockController][DELETE] Current Page Id : {}", pageId);
+    log.info("[VideoBlockController][DELETE] Target Block Id : {}", blockId);
 
     sharePagePrivilegeService.checkEditPrivilege(loginUser.user().getUserId(), pageId);
 
