@@ -5,6 +5,7 @@ import javax.persistence.EntityNotFoundException;
 import kr.joberchip.core.block.MapBlock;
 import kr.joberchip.core.page.SharePage;
 import kr.joberchip.server.v1._errors.ErrorMessage;
+import kr.joberchip.server.v1._errors.exceptions.ApiClientException;
 import kr.joberchip.server.v1.block.controller.dto.BlockResponseDTO;
 import kr.joberchip.server.v1.block.controller.dto.MapBlockDTO;
 import kr.joberchip.server.v1.block.repository.MapBlockRepository;
@@ -24,9 +25,7 @@ public class MapBlockService {
 
   @Transactional
   public BlockResponseDTO createMapBlock(UUID pageId, MapBlockDTO.Create crateMapBlockDTO) {
-    SharePage parentPage =
-            getParentPage(pageId);
-
+    SharePage parentPage = checkPageId(pageId);
     MapBlock newMapBlock = crateMapBlockDTO.toEntity();
 
     mapBlockRepository.save(newMapBlock);
@@ -37,23 +36,14 @@ public class MapBlockService {
     return BlockResponseDTO.fromEntity(newMapBlock);
   }
 
-  private SharePage getParentPage(UUID pageId) {
-    return sharePageRepository
-            .findSharePageByObjectId(pageId)
-            .orElseThrow(EntityNotFoundException::new);
-  }
-
   @Transactional
   public BlockResponseDTO modifyMapBlock(
       UUID pageId, UUID blockId, MapBlockDTO.Modify modifyMapBlockDTO) {
+
+    checkPageId(pageId);
+
     MapBlock mapBlock =
-        mapBlockRepository
-            .findById(blockId)
-            .orElseThrow(
-                () -> {
-                  log.error("존재하지 않는 blockId - blockId: {}", blockId);
-                  return new EntityNotFoundException(ErrorMessage.ENTITY_NOT_FOUND);
-                });
+            checkBlockId(blockId);
 
     if (modifyMapBlockDTO.getAddress() != null) mapBlock.setAddress(modifyMapBlockDTO.getAddress());
     if (modifyMapBlockDTO.getLatitude() != null)
@@ -68,7 +58,25 @@ public class MapBlockService {
   }
 
   @Transactional
-  public void deleteMapBlock(UUID blockId) {
+  public void deleteMapBlock(UUID pageId, UUID blockId) {
+    checkPageId(pageId);
+    checkBlockId(blockId);
     mapBlockRepository.deleteById(blockId);
+  }
+
+  private MapBlock checkBlockId(UUID blockId) {
+    return mapBlockRepository
+            .findById(blockId)
+            .orElseThrow(
+                    () -> {
+                      log.error("존재하지 않는 blockId - blockId: {}", blockId);
+                      return new EntityNotFoundException(ErrorMessage.ENTITY_NOT_FOUND);
+                    });
+  }
+
+  private SharePage checkPageId(UUID pageId) {
+    return sharePageRepository
+            .findById(pageId)
+            .orElseThrow(() -> new ApiClientException(ErrorMessage.SHARE_PAGE_ENTITY_NOT_FOUND));
   }
 }
