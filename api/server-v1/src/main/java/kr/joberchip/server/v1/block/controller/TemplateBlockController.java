@@ -38,7 +38,7 @@ public class TemplateBlockController {
   }
 
   @PutMapping("/{blockId}")
-  public ApiResponse.Result<BlockResponseDTO> modifyLinkBlock(
+  public ApiResponse.Result<BlockResponseDTO> modifyTemplateBlock(
       @AuthenticationPrincipal CustomUserDetails loginUser,
       @PathVariable UUID pageId,
       @PathVariable UUID blockId,
@@ -57,7 +57,7 @@ public class TemplateBlockController {
   }
 
   @DeleteMapping("/{blockId}")
-  public ApiResponse.Result<Object> deleteLinkBlock(
+  public ApiResponse.Result<Object> deleteTemplateBlock(
       @AuthenticationPrincipal CustomUserDetails loginUser,
       @PathVariable UUID pageId,
       @PathVariable UUID blockId) {
