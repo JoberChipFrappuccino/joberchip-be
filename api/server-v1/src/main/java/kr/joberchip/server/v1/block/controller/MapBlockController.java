@@ -51,7 +51,7 @@ public class MapBlockController {
       @PathVariable UUID pageId,
       @PathVariable UUID blockId) {
     sharePagePrivilegeService.checkEditPrivilege(loginUser.user().getUserId(), pageId);
-    mapBlockService.deleteMapBlock(blockId);
+    mapBlockService.deleteMapBlock(pageId, blockId);
     return ApiResponse.success();
   }
 }
