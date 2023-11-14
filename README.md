@@ -169,6 +169,10 @@
 <br>
 
 ### 2. 시스템 아키텍쳐
+<img width="1173" alt="아키텍쳐" src="https://github.com/JoberChipFrappuccino/joberchip-be-demo/assets/128347921/58f81b82-9608-41f6-94d8-9429b654c7b2">
+
+<br>
+
 ### 3. 패키지 구조
 ```markdown
 📦 joberchip-be
